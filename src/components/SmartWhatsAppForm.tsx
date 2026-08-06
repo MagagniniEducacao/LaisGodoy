@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, MessageCircle, CheckCircle, User, Phone, Target, FileText } from 'lucide-react';
+import { Sparkles, MessageCircle, CheckCircle, User, Target, FileText } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import type { Treatment, ClinicSettings, SmartLead } from '../types/clinic';
 
@@ -20,7 +20,6 @@ export const SmartWhatsAppForm: React.FC<SmartFormProps> = ({
     preselectedTreatment || treatments[0]?.name || 'Ultrassom + Corrente Russa'
   );
   const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
   const [goal, setGoal] = useState<string>('Reduzir medidas');
   const [description, setDescription] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -45,8 +44,8 @@ export const SmartWhatsAppForm: React.FC<SmartFormProps> = ({
   const handleSendWhatsApp = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!name.trim() || !phone.trim()) {
-      alert('Por favor, informe seu nome e telefone WhatsApp.');
+    if (!name.trim()) {
+      alert('Por favor, informe seu nome.');
       return;
     }
 
@@ -61,14 +60,14 @@ export const SmartWhatsAppForm: React.FC<SmartFormProps> = ({
     // Save lead entry in local CMS
     onAddLead({
       name,
-      phone,
+      phone: 'Não fornecido',
       treatmentName: selectedTreatment,
       objective: goal,
       description: description || 'Nenhuma observação adicional',
     });
 
     // Format WhatsApp message text
-    const messageText = `Olá!\n\nMeu nome é *${name}*.\n\nTenho interesse no procedimento:\n*${selectedTreatment}*\n\nObjetivo principal:\n✔ *${goal}*\n\n${description ? `Descrição do meu caso:\n"${description}"\n\n` : ''}Meu WhatsApp de contato:\n${phone}\n\nGostaria de agendar uma avaliação.`;
+    const messageText = `Olá!\n\nMeu nome é *${name}*.\n\nTenho interesse no procedimento:\n*${selectedTreatment}*\n\nObjetivo principal:\n✔ *${goal}*\n\n${description ? `Descrição do meu caso:\n"${description}"\n\n` : ''}Gostaria de agendar uma avaliação.`;
 
     const encodedMsg = encodeURIComponent(messageText);
     const cleanPhone = settings.whatsapp.replace(/\D/g, '');
@@ -177,29 +176,6 @@ export const SmartWhatsAppForm: React.FC<SmartFormProps> = ({
                     placeholder="Ex: Ana Silva"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '0.85rem 1rem',
-                      borderRadius: '12px',
-                      border: '1px solid #D9B48F',
-                      background: '#F8F6F2',
-                      fontSize: '0.92rem',
-                      outline: 'none',
-                    }}
-                  />
-                </div>
-
-                <div>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600, color: '#8A6245', fontSize: '0.9rem', marginBottom: '0.4rem' }}>
-                    <Phone size={16} className="text-gold" />
-                    Telefone WhatsApp:
-                  </label>
-                  <input
-                    type="tel"
-                    required
-                    placeholder="(11) 99999-9999"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
                     style={{
                       width: '100%',
                       padding: '0.85rem 1rem',

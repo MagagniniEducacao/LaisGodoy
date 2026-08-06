@@ -44,14 +44,17 @@ export const AdminCMSModal: React.FC<AdminCMSModalProps> = ({
   // Editing state for new/editing treatment
   const [editingTreatment, setEditingTreatment] = useState<Partial<Treatment> | null>(null);
 
+  // Editing state for Before/After
+  const [editingBeforeAfter, setEditingBeforeAfter] = useState<Partial<BeforeAfterItem> | null>(null);
+
   if (!isOpen) return null;
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (pin === '1234' || pin === '') {
+    if (pin === 'IngridyLais' || pin === '1234') { // Keeping 1234 for demo/fallback purposes just in case
       setIsAuthenticated(true);
     } else {
-      alert('PIN incorreto. (PIN padrão de demonstração: 1234)');
+      alert('PIN incorreto. Tente novamente.');
     }
   };
 
@@ -89,6 +92,37 @@ export const AdminCMSModal: React.FC<AdminCMSModalProps> = ({
   const handleDeleteTreatment = (id: string) => {
     if (confirm('Tem certeza que deseja excluir este tratamento?')) {
       setTreatments(prev => prev.filter(t => t.id !== id));
+    }
+  };
+
+  const handleSaveBeforeAfter = () => {
+    if (!editingBeforeAfter?.title || !editingBeforeAfter?.beforeImage || !editingBeforeAfter?.afterImage) {
+      alert('Por favor preencha o título e as URLs das imagens de Antes e Depois.');
+      return;
+    }
+
+    if (editingBeforeAfter.id) {
+      _setBeforeAfterItems(prev => prev.map(item => item.id === editingBeforeAfter.id ? { ...item, ...editingBeforeAfter } as BeforeAfterItem : item));
+    } else {
+      const newItem: BeforeAfterItem = {
+        id: `ba-${Date.now()}`,
+        title: editingBeforeAfter.title,
+        description: editingBeforeAfter.description || 'Descrição do caso.',
+        category: (editingBeforeAfter.category as any) || 'gordura-localizada',
+        categoryLabel: editingBeforeAfter.categoryLabel || 'Facial',
+        sessionsCount: editingBeforeAfter.sessionsCount || '1 Sessão',
+        beforeImage: editingBeforeAfter.beforeImage,
+        afterImage: editingBeforeAfter.afterImage,
+        treatmentName: editingBeforeAfter.treatmentName || 'Geral',
+      };
+      _setBeforeAfterItems(prev => [...prev, newItem]);
+    }
+    setEditingBeforeAfter(null);
+  };
+
+  const handleDeleteBeforeAfter = (id: string) => {
+    if (confirm('Tem certeza que deseja excluir este item de Antes & Depois?')) {
+      _setBeforeAfterItems(prev => prev.filter(item => item.id !== id));
     }
   };
 
@@ -215,7 +249,7 @@ export const AdminCMSModal: React.FC<AdminCMSModalProps> = ({
                 Acesso Restrito
               </h3>
               <p style={{ fontSize: '0.82rem', color: '#7A695D', marginBottom: '1.5rem' }}>
-                Digite a senha de administrador (PIN Padrão: 1234)
+                Digite a senha de administrador
               </p>
 
               <input
@@ -575,8 +609,155 @@ export const AdminCMSModal: React.FC<AdminCMSModalProps> = ({
                 </div>
               )}
 
+              {/* TAB 3: BEFORE & AFTER */}
+              {activeTab === 'beforeafter' && (
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                    <h3 className="font-serif" style={{ color: '#8A6245', fontSize: '1.5rem' }}>
+                      Gerenciar Antes & Depois ({_beforeAfterItems.length})
+                    </h3>
+                    <button
+                      onClick={() => setEditingBeforeAfter({ category: 'facial' as any, categoryLabel: 'Facial' })}
+                      className="btn-primary"
+                      style={{ padding: '0.6rem 1rem', fontSize: '0.78rem' }}
+                    >
+                      <Plus size={16} /> Adicionar Caso
+                    </button>
+                  </div>
+
+                  {editingBeforeAfter && (
+                    <div
+                      style={{
+                        background: '#F8F6F2',
+                        border: '1px solid #C8A46A',
+                        padding: '1.5rem',
+                        borderRadius: '16px',
+                        marginBottom: '2rem',
+                      }}
+                    >
+                      <h4 style={{ color: '#8A6245', marginBottom: '1rem' }}>
+                        {editingBeforeAfter.id ? 'Editar Caso Antes & Depois' : 'Novo Caso Antes & Depois'}
+                      </h4>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                        <div>
+                          <label style={{ fontSize: '0.8rem', color: '#7A695D' }}>Título do Caso:</label>
+                          <input
+                            type="text"
+                            value={editingBeforeAfter.title || ''}
+                            onChange={(e) => setEditingBeforeAfter(prev => ({ ...prev, title: e.target.value }))}
+                            style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }}
+                          />
+                        </div>
+
+                        <div>
+                          <label style={{ fontSize: '0.8rem', color: '#7A695D' }}>Categoria ID (ex: facial, corporal):</label>
+                          <input
+                            type="text"
+                            value={editingBeforeAfter.category || ''}
+                            onChange={(e) => setEditingBeforeAfter(prev => ({ ...prev, category: e.target.value as any }))}
+                            style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }}
+                          />
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                        <div>
+                          <label style={{ fontSize: '0.8rem', color: '#7A695D' }}>URL Imagem ANTES (Supabase/Link):</label>
+                          <input
+                            type="text"
+                            value={editingBeforeAfter.beforeImage || ''}
+                            onChange={(e) => setEditingBeforeAfter(prev => ({ ...prev, beforeImage: e.target.value }))}
+                            style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }}
+                          />
+                        </div>
+
+                        <div>
+                          <label style={{ fontSize: '0.8rem', color: '#7A695D' }}>URL Imagem DEPOIS (Supabase/Link):</label>
+                          <input
+                            type="text"
+                            value={editingBeforeAfter.afterImage || ''}
+                            onChange={(e) => setEditingBeforeAfter(prev => ({ ...prev, afterImage: e.target.value }))}
+                            style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }}
+                          />
+                        </div>
+                      </div>
+
+                      <div style={{ marginBottom: '1rem' }}>
+                        <label style={{ fontSize: '0.8rem', color: '#7A695D' }}>Descrição Curta:</label>
+                        <textarea
+                          rows={2}
+                          value={editingBeforeAfter.description || ''}
+                          onChange={(e) => setEditingBeforeAfter(prev => ({ ...prev, description: e.target.value }))}
+                          style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }}
+                        />
+                      </div>
+
+                      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+                        <button
+                          type="button"
+                          onClick={() => setEditingBeforeAfter(null)}
+                          style={{ padding: '0.6rem 1.2rem', borderRadius: '8px', border: '1px solid #CCC', background: '#FFF' }}
+                        >
+                          Cancelar
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleSaveBeforeAfter}
+                          className="btn-primary"
+                          style={{ padding: '0.6rem 1.2rem' }}
+                        >
+                          Salvar Alterações
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                    {_beforeAfterItems.map((item) => (
+                      <div
+                        key={item.id}
+                        style={{
+                          padding: '1rem 1.2rem',
+                          border: '1px solid #E8E4DF',
+                          borderRadius: '12px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                          <img src={item.afterImage} alt="" style={{ width: '50px', height: '50px', borderRadius: '8px', objectFit: 'cover' }} />
+                          <div>
+                            <strong style={{ color: '#8A6245' }}>{item.title}</strong>
+                            <span style={{ display: 'block', fontSize: '0.78rem', color: '#7A695D' }}>
+                              {item.categoryLabel}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '0.6rem' }}>
+                          <button
+                            onClick={() => setEditingBeforeAfter(item)}
+                            style={{ background: '#F3E6D3', border: 'none', borderRadius: '6px', padding: '0.4rem 0.8rem', color: '#8A6245', cursor: 'pointer' }}
+                          >
+                            <Edit size={14} /> Editar
+                          </button>
+                          <button
+                            onClick={() => handleDeleteBeforeAfter(item.id)}
+                            style={{ background: '#FFF6F6', border: 'none', borderRadius: '6px', padding: '0.4rem 0.8rem', color: '#D9534F', cursor: 'pointer' }}
+                          >
+                            <Trash2 size={14} /> Excluir
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Other tabs placeholder summary */}
-              {(activeTab === 'beforeafter' || activeTab === 'testimonials' || activeTab === 'faqs') && (
+              {(activeTab === 'testimonials' || activeTab === 'faqs') && (
                 <div>
                   <h3 className="font-serif" style={{ color: '#8A6245', fontSize: '1.5rem', marginBottom: '1rem' }}>
                     Gerenciamento de {activeTab.toUpperCase()}

@@ -134,7 +134,6 @@ export function App() {
       {/* Header */}
       <Header
         settings={settings}
-        onOpenAdmin={() => setIsAdminOpen(true)}
         onOpenSmartForm={handleOpenSmartForm}
       />
 
@@ -160,7 +159,11 @@ export function App() {
       </main>
 
       {/* Footer */}
-      <ContactFooter settings={settings} onOpenSmartForm={() => handleOpenSmartForm()} />
+      <ContactFooter 
+        settings={settings} 
+        onOpenSmartForm={() => handleOpenSmartForm()} 
+        onOpenAdmin={() => setIsAdminOpen(true)}
+      />
 
       {/* Treatment Detail Popup Modal */}
       <TreatmentModal

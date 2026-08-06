@@ -5,9 +5,10 @@ import type { ClinicSettings } from '../types/clinic';
 interface ContactFooterProps {
   settings: ClinicSettings;
   onOpenSmartForm: () => void;
+  onOpenAdmin: () => void;
 }
 
-export const ContactFooter: React.FC<ContactFooterProps> = ({ settings, onOpenSmartForm }) => {
+export const ContactFooter: React.FC<ContactFooterProps> = ({ settings, onOpenSmartForm, onOpenAdmin }) => {
   return (
     <footer id="contato" style={{ background: '#3A2E28', color: '#F8F6F2', paddingTop: '5rem' }}>
       <div className="container">
@@ -124,7 +125,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({ settings, onOpenSm
             color: '#D9B48F',
           }}
         >
-          <div>
+          <div onDoubleClick={onOpenAdmin} style={{ userSelect: 'none', cursor: 'pointer' }} title="Área Restrita (Duplo Clique)">
             © {new Date().getFullYear()} {settings.brandName} - {settings.subTitle}. Todos os direitos reservados.
           </div>
 
