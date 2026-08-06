@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Menu, X, PhoneCall } from 'lucide-react';
+import { Calendar, Settings, Menu, X, PhoneCall } from 'lucide-react';
 import type { ClinicSettings } from '../types/clinic';
 
 interface HeaderProps {
   settings: ClinicSettings;
+  onOpenAdmin: () => void;
   onOpenSmartForm: (treatmentName?: string) => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ settings, onOpenSmartForm }) => {
+export const Header: React.FC<HeaderProps> = ({ settings, onOpenAdmin, onOpenSmartForm }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -95,7 +96,29 @@ export const Header: React.FC<HeaderProps> = ({ settings, onOpenSmartForm }) => 
           </nav>
 
           {/* Actions */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+            <button
+              onClick={onOpenAdmin}
+              title="Abrir Painel Administrativo CMS"
+              style={{
+                background: 'rgba(243, 230, 211, 0.7)',
+                border: '1px solid #D9B48F',
+                borderRadius: '50%',
+                width: '38px',
+                height: '38px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                color: '#8A6245',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = '#D9B48F')}
+              onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(243, 230, 211, 0.7)')}
+            >
+              <Settings size={18} />
+            </button>
+
             <button
               onClick={() => onOpenSmartForm()}
               className="btn-primary"

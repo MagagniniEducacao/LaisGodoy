@@ -134,6 +134,7 @@ export function App() {
       {/* Header */}
       <Header
         settings={settings}
+        onOpenAdmin={() => setIsAdminOpen(true)}
         onOpenSmartForm={handleOpenSmartForm}
       />
 
