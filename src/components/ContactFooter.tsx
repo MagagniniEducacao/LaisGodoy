@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Phone, Instagram, Clock, MessageCircle, ShieldCheck, Heart } from 'lucide-react';
+import { MapPin, Phone, Clock, MessageCircle, ShieldCheck } from 'lucide-react';
 import type { ClinicSettings } from '../types/clinic';
 
 interface ContactFooterProps {
@@ -69,7 +69,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({ settings, onOpenSm
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <Instagram size={18} className="text-gold" />
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C8A46A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
                 <a
                   href={`https://instagram.com/${settings.instagram.replace('@', '')}`}
                   target="_blank"

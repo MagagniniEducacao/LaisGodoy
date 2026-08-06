@@ -1,6 +1,6 @@
 import React from 'react';
-import { Sparkles, CheckCircle2, HeartHandshake, Microchip, Clock, Award } from 'lucide-react';
-import { ClinicSettings } from '../types/clinic';
+import { Sparkles, HeartHandshake, Microchip, Clock, Award } from 'lucide-react';
+import type { ClinicSettings } from '../types/clinic';
 
 interface AboutProps {
   settings: ClinicSettings;

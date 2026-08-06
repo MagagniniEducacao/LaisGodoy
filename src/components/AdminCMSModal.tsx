@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Lock, Save, Plus, Trash2, Edit, RefreshCw, CheckCircle, PhoneCall, List, Settings, Image as ImageIcon, MessageSquare, HelpCircle } from 'lucide-react';
+import { X, Lock, Plus, Trash2, Edit, RefreshCw, List, Settings, Image as ImageIcon, MessageSquare, HelpCircle } from 'lucide-react';
 import type { Treatment, BeforeAfterItem, Testimonial, FAQItem, ClinicSettings, SmartLead } from '../types/clinic';
 
 interface AdminCMSModalProps {
@@ -25,12 +25,12 @@ export const AdminCMSModal: React.FC<AdminCMSModalProps> = ({
   onClose,
   treatments,
   setTreatments,
-  beforeAfterItems,
-  setBeforeAfterItems,
-  testimonials,
-  setTestimonials,
-  faqs,
-  setFaqs,
+  beforeAfterItems: _beforeAfterItems,
+  setBeforeAfterItems: _setBeforeAfterItems,
+  testimonials: _testimonials,
+  setTestimonials: _setTestimonials,
+  faqs: _faqs,
+  setFaqs: _setFaqs,
   settings,
   setSettings,
   leads,
