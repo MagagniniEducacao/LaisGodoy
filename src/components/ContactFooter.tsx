@@ -1,6 +1,6 @@
 import React from 'react';
 import { MapPin, Phone, Instagram, Clock, MessageCircle, ShieldCheck, Heart } from 'lucide-react';
-import { ClinicSettings } from '../types/clinic';
+import type { ClinicSettings } from '../types/clinic';
 
 interface ContactFooterProps {
   settings: ClinicSettings;

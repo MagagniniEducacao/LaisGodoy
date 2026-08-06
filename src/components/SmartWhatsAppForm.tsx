@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, MessageCircle, Send, CheckCircle, ArrowRight, User, Phone, Target, FileText } from 'lucide-react';
+import { Sparkles, MessageCircle, CheckCircle, User, Phone, Target, FileText } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { Treatment, ClinicSettings, SmartLead } from '../types/clinic';
+import type { Treatment, ClinicSettings, SmartLead } from '../types/clinic';
 
 interface SmartFormProps {
   treatments: Treatment[];

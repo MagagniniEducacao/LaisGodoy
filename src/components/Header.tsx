@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Calendar, Settings, Menu, X, PhoneCall } from 'lucide-react';
-import { ClinicSettings } from '../types/clinic';
+import { Calendar, Settings, Menu, X, PhoneCall } from 'lucide-react';
+import type { ClinicSettings } from '../types/clinic';
 
 interface HeaderProps {
   settings: ClinicSettings;

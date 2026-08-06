@@ -7,7 +7,7 @@ import {
   INITIAL_TESTIMONIALS,
   INITIAL_FAQS,
 } from './data/initialData';
-import { Treatment, BeforeAfterItem, Testimonial, FAQItem, ClinicSettings, SmartLead } from './types/clinic';
+import type { Treatment, BeforeAfterItem, Testimonial, FAQItem, ClinicSettings, SmartLead } from './types/clinic';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { AboutSection } from './components/AboutSection';

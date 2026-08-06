@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Sparkles, Maximize2, X, MoveHorizontal } from 'lucide-react';
-import { BeforeAfterItem } from '../types/clinic';
+import type { BeforeAfterItem } from '../types/clinic';
 
 interface BeforeAfterProps {
   items: BeforeAfterItem[];

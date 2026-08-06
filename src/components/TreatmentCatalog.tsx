@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Sparkles, Clock, ArrowRight, Star } from 'lucide-react';
-import { Treatment, CategoryType } from '../types/clinic';
+import { Sparkles, Clock, Star } from 'lucide-react';
+import type { Treatment, CategoryType } from '../types/clinic';
 
 interface CatalogProps {
   treatments: Treatment[];

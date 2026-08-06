@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Sparkles, ChevronDown, HelpCircle } from 'lucide-react';
-import { FAQItem } from '../types/clinic';
+import { Sparkles, ChevronDown } from 'lucide-react';
+import type { FAQItem } from '../types/clinic';
 
 interface FAQProps {
   faqs: FAQItem[];

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Sparkles, Star, Quote } from 'lucide-react';
-import { Testimonial } from '../types/clinic';
+import type { Testimonial } from '../types/clinic';
 
 interface TestimonialsProps {
   testimonials: Testimonial[];

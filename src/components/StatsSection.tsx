@@ -1,6 +1,6 @@
 import React from 'react';
 import { Users, Calendar, Award, Heart } from 'lucide-react';
-import { ClinicSettings } from '../types/clinic';
+import type { ClinicSettings } from '../types/clinic';
 
 interface StatsProps {
   settings: ClinicSettings;

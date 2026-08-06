@@ -1,4 +1,4 @@
-import { Treatment, BeforeAfterItem, Testimonial, FAQItem, ClinicSettings } from '../types/clinic';
+import type { Treatment, BeforeAfterItem, Testimonial, FAQItem, ClinicSettings } from '../types/clinic';
 
 export const INITIAL_CLINIC_SETTINGS: ClinicSettings = {
   brandName: 'Lais Godoy',

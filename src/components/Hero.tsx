@@ -1,6 +1,6 @@
 import React from 'react';
 import { Sparkles, Calendar, ChevronRight, Award, ShieldCheck, Star } from 'lucide-react';
-import { ClinicSettings } from '../types/clinic';
+import type { ClinicSettings } from '../types/clinic';
 
 interface HeroProps {
   settings: ClinicSettings;

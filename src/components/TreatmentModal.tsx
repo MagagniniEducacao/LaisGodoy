@@ -1,6 +1,6 @@
 import React from 'react';
-import { X, Clock, Calendar, CheckCircle2, AlertTriangle, Sparkles, MessageCircle } from 'lucide-react';
-import { Treatment } from '../types/clinic';
+import { X, Clock, Calendar, CheckCircle2, AlertTriangle, MessageCircle } from 'lucide-react';
+import type { Treatment } from '../types/clinic';
 
 interface TreatmentModalProps {
   treatment: Treatment | null;
