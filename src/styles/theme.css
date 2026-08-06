@@ -1,0 +1,227 @@
+/* ==========================================================================
+   Lais Godoy - Estética Avançada Design System & Theme CSS
+   Paleta: Branco (#F8F6F2), Bege claro (#F3E6D3), Nude/Champagne (#D9B48F), 
+   Marrom claro (#A97A54), Marrom médio (#8A6245), Dourado suave (#C8A46A)
+   ========================================================================== */
+
+:root {
+  --color-white: #F8F6F2;
+  --color-beige-light: #F3E6D3;
+  --color-nude-champagne: #D9B48F;
+  --color-brown-light: #A97A54;
+  --color-brown-medium: #8A6245;
+  --color-gold-soft: #C8A46A;
+  --color-gray-warm: #E8E4DF;
+  --color-text-dark: #3A2E28;
+  --color-text-muted: #7A695D;
+  
+  --font-title: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Montserrat', sans-serif;
+  
+  --shadow-subtle: 0 10px 30px -10px rgba(138, 98, 69, 0.08);
+  --shadow-gold: 0 15px 35px -10px rgba(200, 164, 106, 0.25);
+  --shadow-hover: 0 20px 40px -15px rgba(138, 98, 69, 0.15);
+  
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+  
+  --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: var(--font-body);
+  background-color: var(--color-white);
+  color: var(--color-text-dark);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  overflow-x: hidden;
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+}
+
+/* Typography Helpers */
+h1, h2, h3, h4, .font-serif {
+  font-family: var(--font-title);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--color-brown-medium);
+}
+
+h1 {
+  font-size: clamp(2.5rem, 5vw, 4.2rem);
+  line-height: 1.15;
+}
+
+h2 {
+  font-size: clamp(2rem, 3.8vw, 3rem);
+  line-height: 1.2;
+}
+
+h3 {
+  font-size: clamp(1.4rem, 2.2vw, 1.8rem);
+  line-height: 1.3;
+}
+
+p {
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  font-weight: 300;
+}
+
+.text-gold {
+  color: var(--color-gold-soft);
+}
+
+.text-champagne {
+  color: var(--color-nude-champagne);
+}
+
+.text-brown-medium {
+  color: var(--color-brown-medium);
+}
+
+.tracking-wide-luxury {
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+/* Luxury Buttons */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.9rem 2rem;
+  background: linear-gradient(135deg, var(--color-gold-soft) 0%, var(--color-brown-light) 100%);
+  color: #FFF;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-gold);
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 35px -8px rgba(200, 164, 106, 0.4);
+  background: linear-gradient(135deg, var(--color-brown-light) 0%, var(--color-brown-medium) 100%);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.9rem 2rem;
+  background: rgba(248, 246, 242, 0.8);
+  color: var(--color-brown-medium);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-gold-soft);
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+  backdrop-filter: blur(10px);
+}
+
+.btn-secondary:hover {
+  background: var(--color-beige-light);
+  color: var(--color-brown-medium);
+  border-color: var(--color-brown-light);
+  transform: translateY(-2px);
+}
+
+/* Glassmorphism & Luxury Cards */
+.card-luxury {
+  background: #FFFFFF;
+  border: 1px solid rgba(200, 164, 106, 0.2);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-subtle);
+  transition: var(--transition);
+}
+
+.card-luxury:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+  border-color: rgba(200, 164, 106, 0.45);
+}
+
+.glass-pill {
+  background: rgba(243, 230, 211, 0.6);
+  border: 1px solid rgba(217, 180, 143, 0.4);
+  backdrop-filter: blur(8px);
+  padding: 0.35rem 1rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-brown-medium);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Container & Layout */
+.container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.section-padding {
+  padding: 6rem 0;
+}
+
+/* Organic Background Line Art Patterns */
+.bg-organic-pattern {
+  background-color: var(--color-white);
+  background-image: radial-gradient(circle at 10% 20%, rgba(243, 230, 211, 0.4) 0%, transparent 40%),
+                    radial-gradient(circle at 90% 80%, rgba(217, 180, 143, 0.25) 0%, transparent 45%);
+}
+
+.bg-beige-subtle {
+  background-color: var(--color-beige-light);
+}
+
+.gold-divider {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-gold-soft), transparent);
+  margin: 1.5rem auto;
+}
+
+/* Scrollbar customization */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-white);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-nude-champagne);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gold-soft);
+}
