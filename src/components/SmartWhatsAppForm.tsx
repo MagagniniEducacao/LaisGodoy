@@ -53,7 +53,8 @@ export const SmartWhatsAppForm: React.FC<SmartFormProps> = ({
   const getTreatmentDurationMinutes = (tName: string) => {
     const treatment = treatments.find(t => t.name === tName);
     if (!treatment) return 30;
-    const match = treatment.sessionDuration.match(/(\d+)/);
+    const sessionDurationStr = treatment.sessionDuration || '30 minutos';
+    const match = sessionDurationStr.match(/(\d+)/);
     return match ? parseInt(match[1], 10) : 30;
   };
 
@@ -73,15 +74,19 @@ export const SmartWhatsAppForm: React.FC<SmartFormProps> = ({
     
     const dayOfWeek = dateObj.getDay();
 
-    if (!settings.workingDays.includes(dayOfWeek)) {
+    const workingDays = settings.workingDays || [1, 2, 3, 4, 5, 6];
+    if (!workingDays.includes(dayOfWeek)) {
       return []; 
     }
 
     const durationMinutes = getTreatmentDurationMinutes(selectedTreatment);
     const blocksNeeded = Math.ceil(durationMinutes / 30);
 
-    const [startH, startM] = settings.workingStartTime.split(':').map(Number);
-    const [endH, endM] = settings.workingEndTime.split(':').map(Number);
+    const startTimeStr = settings.workingStartTime || '09:00';
+    const endTimeStr = settings.workingEndTime || '18:00';
+
+    const [startH, startM] = startTimeStr.split(':').map(Number);
+    const [endH, endM] = endTimeStr.split(':').map(Number);
     
     let currentSlot = new Date(dateObj);
     currentSlot.setHours(startH, startM, 0, 0);
@@ -260,7 +265,7 @@ export const SmartWhatsAppForm: React.FC<SmartFormProps> = ({
                 >
                   {treatments.map((t) => (
                     <option key={t.id} value={t.name}>
-                      {t.name} ({t.category.toUpperCase()}) - Duração aprox: {t.sessionDuration}
+                      {t.name} ({(t.category || 'facial').toUpperCase()}) - Duração aprox: {t.sessionDuration || '30 minutos'}
                     </option>
                   ))}
                   <option value="Outro Procedimento Customizado">Outro Procedimento / Avaliação Geral</option>
@@ -424,9 +429,15 @@ export const SmartWhatsAppForm: React.FC<SmartFormProps> = ({
                   Procedimento: {selectedTreatment}. 
                   {(() => {
                     if (selectedDate && selectedTime) {
-                      const d = new Date(`${selectedDate}T00:00:00`);
-                      if (!isNaN(d.getTime())) {
-                        return ` Agendamento: ${format(d, 'dd/MM/yyyy')} às ${selectedTime}.`;
+                      const parts = selectedDate.split('-');
+                      if (parts.length === 3) {
+                        const [year, month, day] = parts.map(Number);
+                        if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
+                          const d = new Date(year, month - 1, day);
+                          if (!isNaN(d.getTime())) {
+                            return ` Agendamento: ${format(d, 'dd/MM/yyyy')} às ${selectedTime}.`;
+                          }
+                        }
                       }
                     }
                     return ' (Selecione Data e Horário)';

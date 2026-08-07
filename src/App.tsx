@@ -25,7 +25,13 @@ export function App() {
   // Persistent State via localStorage
   const [settings, setSettings] = useState<ClinicSettings>(() => {
     const saved = localStorage.getItem('lg_clinic_settings');
-    return saved ? JSON.parse(saved) : INITIAL_CLINIC_SETTINGS;
+    if (!saved) return INITIAL_CLINIC_SETTINGS;
+    try {
+      const parsed = JSON.parse(saved);
+      return { ...INITIAL_CLINIC_SETTINGS, ...parsed };
+    } catch {
+      return INITIAL_CLINIC_SETTINGS;
+    }
   });
 
   const [treatments, setTreatments] = useState<Treatment[]>(() => {

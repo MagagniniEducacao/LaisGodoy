@@ -498,7 +498,7 @@ export const AdminCMSModal: React.FC<AdminCMSModalProps> = ({
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
                     {treatments.map((t) => (
                       <div key={t.id} style={{ padding: '1rem 1.2rem', border: '1px solid #E8E4DF', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <div><strong style={{ color: '#8A6245' }}>{t.name}</strong><span style={{ fontSize: '0.78rem', color: '#7A695D', marginLeft: '0.8rem' }}>{t.category.toUpperCase()} • {t.price}</span></div>
+                        <div><strong style={{ color: '#8A6245' }}>{t.name}</strong><span style={{ fontSize: '0.78rem', color: '#7A695D', marginLeft: '0.8rem' }}>{(t.category || 'facial').toUpperCase()} • {t.price}</span></div>
                         <div style={{ display: 'flex', gap: '0.6rem' }}>
                           <button onClick={() => setEditingTreatment(t)} style={{ background: '#F3E6D3', border: 'none', borderRadius: '6px', padding: '0.4rem 0.8rem', color: '#8A6245', cursor: 'pointer' }}><Edit size={14} /> Editar</button>
                           <button onClick={() => handleDeleteTreatment(t.id)} style={{ background: '#FFF6F6', border: 'none', borderRadius: '6px', padding: '0.4rem 0.8rem', color: '#D9534F', cursor: 'pointer' }}><Trash2 size={14} /> Excluir</button>
