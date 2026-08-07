@@ -484,7 +484,10 @@ export const AdminCMSModal: React.FC<AdminCMSModalProps> = ({
                         </select>
                         <input type="text" placeholder="Duração (ex: 60 minutos)" value={editingTreatment.sessionDuration || ''} onChange={(e) => setEditingTreatment(prev => ({ ...prev, sessionDuration: e.target.value }))} style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }} />
                       </div>
-                      <textarea rows={2} placeholder="Descrição curta" value={editingTreatment.shortDesc || ''} onChange={(e) => setEditingTreatment(prev => ({ ...prev, shortDesc: e.target.value }))} style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F', marginBottom: '1rem' }} />
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                        <textarea rows={2} placeholder="Descrição curta" value={editingTreatment.shortDesc || ''} onChange={(e) => setEditingTreatment(prev => ({ ...prev, shortDesc: e.target.value }))} style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }} />
+                        <input type="text" placeholder="URL da Imagem" value={editingTreatment.image || ''} onChange={(e) => setEditingTreatment(prev => ({ ...prev, image: e.target.value }))} style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F', height: 'fit-content', alignSelf: 'center' }} />
+                      </div>
                       <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
                         <button onClick={() => setEditingTreatment(null)} style={{ padding: '0.6rem 1.2rem', borderRadius: '8px', border: '1px solid #CCC', background: '#FFF' }}>Cancelar</button>
                         <button onClick={handleSaveTreatment} className="btn-primary" style={{ padding: '0.6rem 1.2rem' }}>Salvar Alterações</button>

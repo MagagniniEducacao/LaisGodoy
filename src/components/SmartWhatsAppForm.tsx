@@ -62,6 +62,10 @@ export const SmartWhatsAppForm: React.FC<SmartFormProps> = ({
     if (!selectedDate) return [];
 
     const dateObj = new Date(`${selectedDate}T00:00:00`);
+    if (isNaN(dateObj.getTime())) {
+      return [];
+    }
+    
     const dayOfWeek = dateObj.getDay();
 
     if (!settings.workingDays.includes(dayOfWeek)) {
@@ -143,7 +147,12 @@ export const SmartWhatsAppForm: React.FC<SmartFormProps> = ({
       scheduledTime: selectedTime,
     });
 
-    const formattedDate = format(new Date(`${selectedDate}T00:00:00`), 'dd/MM/yyyy');
+    const dateObj = new Date(`${selectedDate}T00:00:00`);
+    if (isNaN(dateObj.getTime())) {
+      alert('Por favor, insira uma data válida.');
+      return;
+    }
+    const formattedDate = format(dateObj, 'dd/MM/yyyy');
 
     const messageText = `Olá!\n\nMeu nome é *${name}*.\n\nTenho interesse no procedimento:\n*${selectedTreatment}*\n\nObjetivo principal:\n✔ *${goal}*\n\n📅 Data escolhida: *${formattedDate}*\n⏰ Horário: *${selectedTime}*\n\n${description ? `Descrição do meu caso:\n"${description}"\n\n` : ''}Gostaria de confirmar meu agendamento.`;
 
@@ -398,7 +407,15 @@ export const SmartWhatsAppForm: React.FC<SmartFormProps> = ({
                 <p style={{ margin: '0.4rem 0 0 0', fontStyle: 'italic', whiteSpace: 'pre-line', color: '#5A4232' }}>
                   Nome: {name || '[Seu Nome]'}. 
                   Procedimento: {selectedTreatment}. 
-                  {selectedDate && selectedTime ? ` Agendamento: ${format(new Date(`${selectedDate}T00:00:00`), 'dd/MM/yyyy')} às ${selectedTime}.` : ' (Selecione Data e Horário)'}
+                  {(() => {
+                    if (selectedDate && selectedTime) {
+                      const d = new Date(`${selectedDate}T00:00:00`);
+                      if (!isNaN(d.getTime())) {
+                        return ` Agendamento: ${format(d, 'dd/MM/yyyy')} às ${selectedTime}.`;
+                      }
+                    }
+                    return ' (Selecione Data e Horário)';
+                  })()}
                 </p>
               </div>
 
