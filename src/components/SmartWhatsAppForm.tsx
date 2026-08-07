@@ -61,7 +61,12 @@ export const SmartWhatsAppForm: React.FC<SmartFormProps> = ({
   const availableSlots = useMemo(() => {
     if (!selectedDate) return [];
 
-    const dateObj = new Date(`${selectedDate}T00:00:00`);
+    const parts = selectedDate.split('-');
+    if (parts.length !== 3) return [];
+    const [year, month, day] = parts.map(Number);
+    if (isNaN(year) || isNaN(month) || isNaN(day)) return [];
+
+    const dateObj = new Date(year, month - 1, day);
     if (isNaN(dateObj.getTime())) {
       return [];
     }
@@ -86,6 +91,7 @@ export const SmartWhatsAppForm: React.FC<SmartFormProps> = ({
 
     const allSlots: string[] = [];
     while (currentSlot < endTime) {
+      if (isNaN(currentSlot.getTime())) break;
       allSlots.push(format(currentSlot, 'HH:mm'));
       currentSlot = addMinutes(currentSlot, 30);
     }
@@ -97,9 +103,12 @@ export const SmartWhatsAppForm: React.FC<SmartFormProps> = ({
         const leadBlocks = Math.ceil(leadDuration / 30);
         let leadSlot = parse(lead.scheduledTime, 'HH:mm', dateObj);
         
-        for (let i = 0; i < leadBlocks; i++) {
-          bookedBlocks.add(format(leadSlot, 'HH:mm'));
-          leadSlot = addMinutes(leadSlot, 30);
+        if (!isNaN(leadSlot.getTime())) {
+          for (let i = 0; i < leadBlocks; i++) {
+            if (isNaN(leadSlot.getTime())) break;
+            bookedBlocks.add(format(leadSlot, 'HH:mm'));
+            leadSlot = addMinutes(leadSlot, 30);
+          }
         }
       }
     });
@@ -147,7 +156,13 @@ export const SmartWhatsAppForm: React.FC<SmartFormProps> = ({
       scheduledTime: selectedTime,
     });
 
-    const dateObj = new Date(`${selectedDate}T00:00:00`);
+    const parts = selectedDate.split('-');
+    if (parts.length !== 3) {
+      alert('Por favor, insira uma data válida.');
+      return;
+    }
+    const [year, month, day] = parts.map(Number);
+    const dateObj = new Date(year, month - 1, day);
     if (isNaN(dateObj.getTime())) {
       alert('Por favor, insira uma data válida.');
       return;
