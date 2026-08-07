@@ -55,6 +55,8 @@ export interface SmartLead {
   objective: string;
   description: string;
   status: 'new' | 'contacted' | 'scheduled';
+  scheduledDate?: string;
+  scheduledTime?: string;
 }
 
 export interface ClinicSettings {
@@ -68,6 +70,9 @@ export interface ClinicSettings {
   address: string;
   cityState: string;
   workingHours: string;
+  workingDays: number[];
+  workingStartTime: string;
+  workingEndTime: string;
   draLaisBio: string;
   experienceYears: number;
   patientsCount: string;

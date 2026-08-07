@@ -41,21 +41,30 @@ export const AboutSection: React.FC<AboutProps> = ({ settings }) => {
             alignItems: 'center',
           }}
         >
-          {/* Photos Collage */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', position: 'relative' }}>
-            <div style={{ borderRadius: '16px', overflow: 'hidden', height: '280px', boxShadow: 'var(--shadow-subtle)' }}>
-              <img
-                src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=600"
-                alt="Dra. Lais Godoy Atendimento"
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              />
-            </div>
-            <div style={{ borderRadius: '16px', overflow: 'hidden', height: '280px', marginTop: '2rem', boxShadow: 'var(--shadow-subtle)' }}>
-              <img
-                src="https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&q=80&w=600"
-                alt="Equipamento Estético de Alta Tecnologia"
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              />
+          {/* Video Placeholder */}
+          <div style={{ position: 'relative', width: '100%', height: '400px', borderRadius: '16px', overflow: 'hidden', boxShadow: 'var(--shadow-subtle)', background: '#E8E4DF', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+            <img
+              src="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&q=80&w=800"
+              alt="Capa do Vídeo"
+              style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.7 }}
+            />
+            <div
+              style={{
+                position: 'absolute',
+                width: '70px',
+                height: '70px',
+                borderRadius: '50%',
+                background: 'rgba(248, 246, 242, 0.85)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: 'var(--shadow-gold)',
+                transition: 'all 0.3s ease',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.1)')}
+              onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+            >
+              <div style={{ width: '0', height: '0', borderTop: '12px solid transparent', borderBottom: '12px solid transparent', borderLeft: '20px solid #8A6245', marginLeft: '6px' }}></div>
             </div>
           </div>
 

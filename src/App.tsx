@@ -154,6 +154,7 @@ export function App() {
           treatments={treatments}
           settings={settings}
           preselectedTreatment={smartFormPreselectedTreatment}
+          leads={leads}
           onAddLead={handleAddLead}
         />
         <FAQSection faqs={faqs} />

@@ -41,17 +41,16 @@ export const AdminCMSModal: React.FC<AdminCMSModalProps> = ({
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState<'treatments' | 'beforeafter' | 'testimonials' | 'faqs' | 'settings' | 'leads'>('leads');
 
-  // Editing state for new/editing treatment
   const [editingTreatment, setEditingTreatment] = useState<Partial<Treatment> | null>(null);
-
-  // Editing state for Before/After
   const [editingBeforeAfter, setEditingBeforeAfter] = useState<Partial<BeforeAfterItem> | null>(null);
+  const [editingTestimonial, setEditingTestimonial] = useState<Partial<Testimonial> | null>(null);
+  const [editingFaq, setEditingFaq] = useState<Partial<FAQItem> | null>(null);
 
   if (!isOpen) return null;
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (pin === 'IngridyLais' || pin === '1234') { // Keeping 1234 for demo/fallback purposes just in case
+    if (pin === 'IngridyLais' || pin === '1234') {
       setIsAuthenticated(true);
     } else {
       alert('PIN incorreto. Tente novamente.');
@@ -63,12 +62,9 @@ export const AdminCMSModal: React.FC<AdminCMSModalProps> = ({
       alert('Por favor preencha Nome e Preço do tratamento.');
       return;
     }
-
     if (editingTreatment.id) {
-      // Update
       setTreatments(prev => prev.map(t => t.id === editingTreatment.id ? { ...t, ...editingTreatment } as Treatment : t));
     } else {
-      // Create new
       const newT: Treatment = {
         id: `custom-${Date.now()}`,
         name: editingTreatment.name || 'Novo Tratamento',
@@ -100,7 +96,6 @@ export const AdminCMSModal: React.FC<AdminCMSModalProps> = ({
       alert('Por favor preencha o título e as URLs das imagens de Antes e Depois.');
       return;
     }
-
     if (editingBeforeAfter.id) {
       _setBeforeAfterItems(prev => prev.map(item => item.id === editingBeforeAfter.id ? { ...item, ...editingBeforeAfter } as BeforeAfterItem : item));
     } else {
@@ -123,6 +118,59 @@ export const AdminCMSModal: React.FC<AdminCMSModalProps> = ({
   const handleDeleteBeforeAfter = (id: string) => {
     if (confirm('Tem certeza que deseja excluir este item de Antes & Depois?')) {
       _setBeforeAfterItems(prev => prev.filter(item => item.id !== id));
+    }
+  };
+
+  const handleSaveTestimonial = () => {
+    if (!editingTestimonial?.name || !editingTestimonial?.text) {
+      alert('Nome e texto são obrigatórios.');
+      return;
+    }
+    if (editingTestimonial.id) {
+      _setTestimonials(prev => prev.map(item => item.id === editingTestimonial.id ? { ...item, ...editingTestimonial } as Testimonial : item));
+    } else {
+      const newItem: Testimonial = {
+        id: `t-${Date.now()}`,
+        name: editingTestimonial.name,
+        role: editingTestimonial.role || 'Cliente',
+        photo: editingTestimonial.photo || 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=300',
+        rating: editingTestimonial.rating || 5,
+        text: editingTestimonial.text,
+        treatmentTaken: editingTestimonial.treatmentTaken || 'Avaliação',
+      };
+      _setTestimonials(prev => [...prev, newItem]);
+    }
+    setEditingTestimonial(null);
+  };
+
+  const handleDeleteTestimonial = (id: string) => {
+    if (confirm('Tem certeza que deseja excluir este depoimento?')) {
+      _setTestimonials(prev => prev.filter(item => item.id !== id));
+    }
+  };
+
+  const handleSaveFaq = () => {
+    if (!editingFaq?.question || !editingFaq?.answer) {
+      alert('Pergunta e resposta são obrigatórias.');
+      return;
+    }
+    if (editingFaq.id) {
+      _setFaqs(prev => prev.map(item => item.id === editingFaq.id ? { ...item, ...editingFaq } as FAQItem : item));
+    } else {
+      const newItem: FAQItem = {
+        id: `faq-${Date.now()}`,
+        question: editingFaq.question,
+        answer: editingFaq.answer,
+        category: editingFaq.category || 'Geral',
+      };
+      _setFaqs(prev => [...prev, newItem]);
+    }
+    setEditingFaq(null);
+  };
+
+  const handleDeleteFaq = (id: string) => {
+    if (confirm('Tem certeza que deseja excluir este FAQ?')) {
+      _setFaqs(prev => prev.filter(item => item.id !== id));
     }
   };
 
@@ -164,7 +212,6 @@ export const AdminCMSModal: React.FC<AdminCMSModalProps> = ({
           border: '1px solid #C8A46A',
         }}
       >
-        {/* Header Bar */}
         <div
           style={{
             background: 'linear-gradient(90deg, #3A2E28 0%, #5A4232 100%)',
@@ -205,7 +252,6 @@ export const AdminCMSModal: React.FC<AdminCMSModalProps> = ({
         </div>
 
         {!isAuthenticated ? (
-          /* Login Screen */
           <div
             style={{
               flexGrow: 1,
@@ -276,9 +322,7 @@ export const AdminCMSModal: React.FC<AdminCMSModalProps> = ({
             </form>
           </div>
         ) : (
-          /* Admin Dashboard */
           <div style={{ display: 'flex', flexGrow: 1, overflow: 'hidden' }}>
-            {/* Sidebar Navigation */}
             <div
               style={{
                 width: '220px',
@@ -346,10 +390,8 @@ export const AdminCMSModal: React.FC<AdminCMSModalProps> = ({
               </div>
             </div>
 
-            {/* Content Tab Panel */}
             <div style={{ flexGrow: 1, padding: '1.8rem', overflowY: 'auto', background: '#FFF' }}>
               
-              {/* TAB 1: LEADS */}
               {activeTab === 'leads' && (
                 <div>
                   <h3 className="font-serif" style={{ color: '#8A6245', fontSize: '1.5rem', marginBottom: '1rem' }}>
@@ -357,7 +399,7 @@ export const AdminCMSModal: React.FC<AdminCMSModalProps> = ({
                   </h3>
 
                   {leads.length === 0 ? (
-                    <p style={{ color: '#7A695D' }}>Nenhuma solicitação enviada ainda. As novas solicitações do formulário aparecerão aqui em tempo real.</p>
+                    <p style={{ color: '#7A695D' }}>Nenhuma solicitação enviada ainda.</p>
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                       {leads.map((lead) => (
@@ -377,12 +419,17 @@ export const AdminCMSModal: React.FC<AdminCMSModalProps> = ({
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '0.4rem' }}>
                               <strong style={{ fontSize: '1rem', color: '#8A6245' }}>{lead.name}</strong>
                               <span style={{ fontSize: '0.85rem', color: '#C8A46A', fontWeight: 600 }}>{lead.phone}</span>
-                              <span style={{ fontSize: '0.72rem', color: '#7A695D' }}>{lead.createdAt}</span>
+                              <span style={{ fontSize: '0.72rem', color: '#7A695D' }}>Recebido em: {lead.createdAt}</span>
                             </div>
                             <p style={{ fontSize: '0.88rem', color: '#3A2E28', marginBottom: '0.2rem' }}>
                               Tratamento: <strong>{lead.treatmentName}</strong> | Objetivo: <strong>{lead.objective}</strong>
                             </p>
-                            <p style={{ fontSize: '0.8rem', color: '#7A695D', fontStyle: 'italic' }}>
+                            {lead.scheduledDate && lead.scheduledTime && (
+                              <div style={{ fontSize: '0.88rem', color: '#3A2E28', marginBottom: '0.2rem', background: '#F3E6D3', padding: '0.4rem 0.8rem', borderRadius: '4px', display: 'inline-block' }}>
+                                📅 Agendamento Solicitado: <strong>{lead.scheduledDate}</strong> às <strong>{lead.scheduledTime}</strong>
+                              </div>
+                            )}
+                            <p style={{ fontSize: '0.8rem', color: '#7A695D', fontStyle: 'italic', marginTop: '0.4rem' }}>
                               "{lead.description}"
                             </p>
                           </div>
@@ -409,7 +456,6 @@ export const AdminCMSModal: React.FC<AdminCMSModalProps> = ({
                 </div>
               )}
 
-              {/* TAB 2: TREATMENTS */}
               {activeTab === 'treatments' && (
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
@@ -425,132 +471,34 @@ export const AdminCMSModal: React.FC<AdminCMSModalProps> = ({
                     </button>
                   </div>
 
-                  {/* Editing Form Modal/Section */}
                   {editingTreatment && (
-                    <div
-                      style={{
-                        background: '#F8F6F2',
-                        border: '1px solid #C8A46A',
-                        padding: '1.5rem',
-                        borderRadius: '16px',
-                        marginBottom: '2rem',
-                      }}
-                    >
-                      <h4 style={{ color: '#8A6245', marginBottom: '1rem' }}>
-                        {editingTreatment.id ? 'Editar Tratamento' : 'Novo Tratamento'}
-                      </h4>
-
+                    <div style={{ background: '#F8F6F2', border: '1px solid #C8A46A', padding: '1.5rem', borderRadius: '16px', marginBottom: '2rem' }}>
+                      <h4 style={{ color: '#8A6245', marginBottom: '1rem' }}>{editingTreatment.id ? 'Editar' : 'Novo'} Tratamento</h4>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-                        <div>
-                          <label style={{ fontSize: '0.8rem', color: '#7A695D' }}>Nome do Tratamento:</label>
-                          <input
-                            type="text"
-                            value={editingTreatment.name || ''}
-                            onChange={(e) => setEditingTreatment(prev => ({ ...prev, name: e.target.value }))}
-                            style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }}
-                          />
-                        </div>
-
-                        <div>
-                          <label style={{ fontSize: '0.8rem', color: '#7A695D' }}>Preço:</label>
-                          <input
-                            type="text"
-                            value={editingTreatment.price || ''}
-                            onChange={(e) => setEditingTreatment(prev => ({ ...prev, price: e.target.value }))}
-                            style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }}
-                          />
-                        </div>
+                        <input type="text" placeholder="Nome" value={editingTreatment.name || ''} onChange={(e) => setEditingTreatment(prev => ({ ...prev, name: e.target.value }))} style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }} />
+                        <input type="text" placeholder="Preço" value={editingTreatment.price || ''} onChange={(e) => setEditingTreatment(prev => ({ ...prev, price: e.target.value }))} style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }} />
                       </div>
-
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-                        <div>
-                          <label style={{ fontSize: '0.8rem', color: '#7A695D' }}>Categoria:</label>
-                          <select
-                            value={editingTreatment.category || 'facial'}
-                            onChange={(e) => setEditingTreatment(prev => ({ ...prev, category: e.target.value as any }))}
-                            style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }}
-                          >
-                            <option value="facial">Facial</option>
-                            <option value="corporal">Corporal</option>
-                            <option value="bem-estar">Bem-Estar</option>
-                          </select>
-                        </div>
-
-                        <div>
-                          <label style={{ fontSize: '0.8rem', color: '#7A695D' }}>Duração da Sessão:</label>
-                          <input
-                            type="text"
-                            value={editingTreatment.sessionDuration || ''}
-                            onChange={(e) => setEditingTreatment(prev => ({ ...prev, sessionDuration: e.target.value }))}
-                            style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }}
-                          />
-                        </div>
+                        <select value={editingTreatment.category || 'facial'} onChange={(e) => setEditingTreatment(prev => ({ ...prev, category: e.target.value as any }))} style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }}>
+                          <option value="facial">Facial</option><option value="corporal">Corporal</option><option value="bem-estar">Bem-Estar</option>
+                        </select>
+                        <input type="text" placeholder="Duração (ex: 60 minutos)" value={editingTreatment.sessionDuration || ''} onChange={(e) => setEditingTreatment(prev => ({ ...prev, sessionDuration: e.target.value }))} style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }} />
                       </div>
-
-                      <div style={{ marginBottom: '1rem' }}>
-                        <label style={{ fontSize: '0.8rem', color: '#7A695D' }}>Descrição Curta:</label>
-                        <textarea
-                          rows={2}
-                          value={editingTreatment.shortDesc || ''}
-                          onChange={(e) => setEditingTreatment(prev => ({ ...prev, shortDesc: e.target.value }))}
-                          style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }}
-                        />
-                      </div>
-
+                      <textarea rows={2} placeholder="Descrição curta" value={editingTreatment.shortDesc || ''} onChange={(e) => setEditingTreatment(prev => ({ ...prev, shortDesc: e.target.value }))} style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F', marginBottom: '1rem' }} />
                       <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
-                        <button
-                          type="button"
-                          onClick={() => setEditingTreatment(null)}
-                          style={{ padding: '0.6rem 1.2rem', borderRadius: '8px', border: '1px solid #CCC', background: '#FFF' }}
-                        >
-                          Cancelar
-                        </button>
-                        <button
-                          type="button"
-                          onClick={handleSaveTreatment}
-                          className="btn-primary"
-                          style={{ padding: '0.6rem 1.2rem' }}
-                        >
-                          Salvar Alterações
-                        </button>
+                        <button onClick={() => setEditingTreatment(null)} style={{ padding: '0.6rem 1.2rem', borderRadius: '8px', border: '1px solid #CCC', background: '#FFF' }}>Cancelar</button>
+                        <button onClick={handleSaveTreatment} className="btn-primary" style={{ padding: '0.6rem 1.2rem' }}>Salvar Alterações</button>
                       </div>
                     </div>
                   )}
 
-                  {/* Treatments List */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
                     {treatments.map((t) => (
-                      <div
-                        key={t.id}
-                        style={{
-                          padding: '1rem 1.2rem',
-                          border: '1px solid #E8E4DF',
-                          borderRadius: '12px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                        }}
-                      >
-                        <div>
-                          <strong style={{ color: '#8A6245' }}>{t.name}</strong>
-                          <span style={{ fontSize: '0.78rem', color: '#7A695D', marginLeft: '0.8rem' }}>
-                            {t.category.toUpperCase()} • {t.price}
-                          </span>
-                        </div>
-
+                      <div key={t.id} style={{ padding: '1rem 1.2rem', border: '1px solid #E8E4DF', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <div><strong style={{ color: '#8A6245' }}>{t.name}</strong><span style={{ fontSize: '0.78rem', color: '#7A695D', marginLeft: '0.8rem' }}>{t.category.toUpperCase()} • {t.price}</span></div>
                         <div style={{ display: 'flex', gap: '0.6rem' }}>
-                          <button
-                            onClick={() => setEditingTreatment(t)}
-                            style={{ background: '#F3E6D3', border: 'none', borderRadius: '6px', padding: '0.4rem 0.8rem', color: '#8A6245', cursor: 'pointer' }}
-                          >
-                            <Edit size={14} /> Editar
-                          </button>
-                          <button
-                            onClick={() => handleDeleteTreatment(t.id)}
-                            style={{ background: '#FFF6F6', border: 'none', borderRadius: '6px', padding: '0.4rem 0.8rem', color: '#D9534F', cursor: 'pointer' }}
-                          >
-                            <Trash2 size={14} /> Excluir
-                          </button>
+                          <button onClick={() => setEditingTreatment(t)} style={{ background: '#F3E6D3', border: 'none', borderRadius: '6px', padding: '0.4rem 0.8rem', color: '#8A6245', cursor: 'pointer' }}><Edit size={14} /> Editar</button>
+                          <button onClick={() => handleDeleteTreatment(t.id)} style={{ background: '#FFF6F6', border: 'none', borderRadius: '6px', padding: '0.4rem 0.8rem', color: '#D9534F', cursor: 'pointer' }}><Trash2 size={14} /> Excluir</button>
                         </div>
                       </div>
                     ))}
@@ -558,215 +506,149 @@ export const AdminCMSModal: React.FC<AdminCMSModalProps> = ({
                 </div>
               )}
 
-              {/* TAB 6: SETTINGS */}
+              {activeTab === 'beforeafter' && (
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                    <h3 className="font-serif" style={{ color: '#8A6245', fontSize: '1.5rem' }}>Gerenciar Antes & Depois ({_beforeAfterItems.length})</h3>
+                    <button onClick={() => setEditingBeforeAfter({ category: 'facial' as any, categoryLabel: 'Facial' })} className="btn-primary" style={{ padding: '0.6rem 1rem', fontSize: '0.78rem' }}>
+                      <Plus size={16} /> Adicionar Caso
+                    </button>
+                  </div>
+                  {editingBeforeAfter && (
+                    <div style={{ background: '#F8F6F2', border: '1px solid #C8A46A', padding: '1.5rem', borderRadius: '16px', marginBottom: '2rem' }}>
+                      <h4 style={{ color: '#8A6245', marginBottom: '1rem' }}>{editingBeforeAfter.id ? 'Editar' : 'Novo'} Caso Antes & Depois</h4>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                        <input type="text" placeholder="Título" value={editingBeforeAfter.title || ''} onChange={(e) => setEditingBeforeAfter(prev => ({ ...prev, title: e.target.value }))} style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }} />
+                        <input type="text" placeholder="Categoria ID (ex: facial)" value={editingBeforeAfter.category || ''} onChange={(e) => setEditingBeforeAfter(prev => ({ ...prev, category: e.target.value as any }))} style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }} />
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                        <input type="text" placeholder="URL Imagem ANTES" value={editingBeforeAfter.beforeImage || ''} onChange={(e) => setEditingBeforeAfter(prev => ({ ...prev, beforeImage: e.target.value }))} style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }} />
+                        <input type="text" placeholder="URL Imagem DEPOIS" value={editingBeforeAfter.afterImage || ''} onChange={(e) => setEditingBeforeAfter(prev => ({ ...prev, afterImage: e.target.value }))} style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }} />
+                      </div>
+                      <textarea rows={2} placeholder="Descrição Curta" value={editingBeforeAfter.description || ''} onChange={(e) => setEditingBeforeAfter(prev => ({ ...prev, description: e.target.value }))} style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F', marginBottom: '1rem' }} />
+                      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+                        <button onClick={() => setEditingBeforeAfter(null)} style={{ padding: '0.6rem 1.2rem', borderRadius: '8px', border: '1px solid #CCC', background: '#FFF' }}>Cancelar</button>
+                        <button onClick={handleSaveBeforeAfter} className="btn-primary" style={{ padding: '0.6rem 1.2rem' }}>Salvar Alterações</button>
+                      </div>
+                    </div>
+                  )}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                    {_beforeAfterItems.map((item) => (
+                      <div key={item.id} style={{ padding: '1rem 1.2rem', border: '1px solid #E8E4DF', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}><img src={item.afterImage} alt="" style={{ width: '50px', height: '50px', borderRadius: '8px', objectFit: 'cover' }} /><div><strong style={{ color: '#8A6245' }}>{item.title}</strong><span style={{ display: 'block', fontSize: '0.78rem', color: '#7A695D' }}>{item.categoryLabel}</span></div></div>
+                        <div style={{ display: 'flex', gap: '0.6rem' }}>
+                          <button onClick={() => setEditingBeforeAfter(item)} style={{ background: '#F3E6D3', border: 'none', borderRadius: '6px', padding: '0.4rem 0.8rem', color: '#8A6245', cursor: 'pointer' }}><Edit size={14} /> Editar</button>
+                          <button onClick={() => handleDeleteBeforeAfter(item.id)} style={{ background: '#FFF6F6', border: 'none', borderRadius: '6px', padding: '0.4rem 0.8rem', color: '#D9534F', cursor: 'pointer' }}><Trash2 size={14} /> Excluir</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'testimonials' && (
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                    <h3 className="font-serif" style={{ color: '#8A6245', fontSize: '1.5rem' }}>Gerenciar Depoimentos ({_testimonials.length})</h3>
+                    <button onClick={() => setEditingTestimonial({ rating: 5 })} className="btn-primary" style={{ padding: '0.6rem 1rem', fontSize: '0.78rem' }}>
+                      <Plus size={16} /> Adicionar Depoimento
+                    </button>
+                  </div>
+                  {editingTestimonial && (
+                    <div style={{ background: '#F8F6F2', border: '1px solid #C8A46A', padding: '1.5rem', borderRadius: '16px', marginBottom: '2rem' }}>
+                      <h4 style={{ color: '#8A6245', marginBottom: '1rem' }}>{editingTestimonial.id ? 'Editar' : 'Novo'} Depoimento</h4>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                        <input type="text" placeholder="Nome" value={editingTestimonial.name || ''} onChange={(e) => setEditingTestimonial(prev => ({ ...prev, name: e.target.value }))} style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }} />
+                        <input type="text" placeholder="Papel / Profissão (Ex: Empresária)" value={editingTestimonial.role || ''} onChange={(e) => setEditingTestimonial(prev => ({ ...prev, role: e.target.value }))} style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }} />
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                        <input type="text" placeholder="URL da Foto" value={editingTestimonial.photo || ''} onChange={(e) => setEditingTestimonial(prev => ({ ...prev, photo: e.target.value }))} style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }} />
+                        <input type="text" placeholder="Tratamento Realizado" value={editingTestimonial.treatmentTaken || ''} onChange={(e) => setEditingTestimonial(prev => ({ ...prev, treatmentTaken: e.target.value }))} style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }} />
+                      </div>
+                      <textarea rows={3} placeholder="Texto do Depoimento" value={editingTestimonial.text || ''} onChange={(e) => setEditingTestimonial(prev => ({ ...prev, text: e.target.value }))} style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F', marginBottom: '1rem' }} />
+                      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+                        <button onClick={() => setEditingTestimonial(null)} style={{ padding: '0.6rem 1.2rem', borderRadius: '8px', border: '1px solid #CCC', background: '#FFF' }}>Cancelar</button>
+                        <button onClick={handleSaveTestimonial} className="btn-primary" style={{ padding: '0.6rem 1.2rem' }}>Salvar Alterações</button>
+                      </div>
+                    </div>
+                  )}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                    {_testimonials.map((item) => (
+                      <div key={item.id} style={{ padding: '1rem 1.2rem', border: '1px solid #E8E4DF', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}><img src={item.photo} alt="" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} /><div><strong style={{ color: '#8A6245' }}>{item.name}</strong><span style={{ display: 'block', fontSize: '0.78rem', color: '#7A695D' }}>{item.treatmentTaken}</span></div></div>
+                        <div style={{ display: 'flex', gap: '0.6rem' }}>
+                          <button onClick={() => setEditingTestimonial(item)} style={{ background: '#F3E6D3', border: 'none', borderRadius: '6px', padding: '0.4rem 0.8rem', color: '#8A6245', cursor: 'pointer' }}><Edit size={14} /> Editar</button>
+                          <button onClick={() => handleDeleteTestimonial(item.id)} style={{ background: '#FFF6F6', border: 'none', borderRadius: '6px', padding: '0.4rem 0.8rem', color: '#D9534F', cursor: 'pointer' }}><Trash2 size={14} /> Excluir</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'faqs' && (
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                    <h3 className="font-serif" style={{ color: '#8A6245', fontSize: '1.5rem' }}>Gerenciar Perguntas FAQ ({_faqs.length})</h3>
+                    <button onClick={() => setEditingFaq({})} className="btn-primary" style={{ padding: '0.6rem 1rem', fontSize: '0.78rem' }}>
+                      <Plus size={16} /> Adicionar FAQ
+                    </button>
+                  </div>
+                  {editingFaq && (
+                    <div style={{ background: '#F8F6F2', border: '1px solid #C8A46A', padding: '1.5rem', borderRadius: '16px', marginBottom: '2rem' }}>
+                      <h4 style={{ color: '#8A6245', marginBottom: '1rem' }}>{editingFaq.id ? 'Editar' : 'Novo'} FAQ</h4>
+                      <input type="text" placeholder="Pergunta" value={editingFaq.question || ''} onChange={(e) => setEditingFaq(prev => ({ ...prev, question: e.target.value }))} style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F', marginBottom: '1rem' }} />
+                      <textarea rows={3} placeholder="Resposta" value={editingFaq.answer || ''} onChange={(e) => setEditingFaq(prev => ({ ...prev, answer: e.target.value }))} style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F', marginBottom: '1rem' }} />
+                      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+                        <button onClick={() => setEditingFaq(null)} style={{ padding: '0.6rem 1.2rem', borderRadius: '8px', border: '1px solid #CCC', background: '#FFF' }}>Cancelar</button>
+                        <button onClick={handleSaveFaq} className="btn-primary" style={{ padding: '0.6rem 1.2rem' }}>Salvar Alterações</button>
+                      </div>
+                    </div>
+                  )}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                    {_faqs.map((item) => (
+                      <div key={item.id} style={{ padding: '1rem 1.2rem', border: '1px solid #E8E4DF', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <div><strong style={{ color: '#8A6245' }}>{item.question}</strong></div>
+                        <div style={{ display: 'flex', gap: '0.6rem' }}>
+                          <button onClick={() => setEditingFaq(item)} style={{ background: '#F3E6D3', border: 'none', borderRadius: '6px', padding: '0.4rem 0.8rem', color: '#8A6245', cursor: 'pointer' }}><Edit size={14} /> Editar</button>
+                          <button onClick={() => handleDeleteFaq(item.id)} style={{ background: '#FFF6F6', border: 'none', borderRadius: '6px', padding: '0.4rem 0.8rem', color: '#D9534F', cursor: 'pointer' }}><Trash2 size={14} /> Excluir</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {activeTab === 'settings' && (
                 <div>
                   <h3 className="font-serif" style={{ color: '#8A6245', fontSize: '1.5rem', marginBottom: '1.2rem' }}>
                     Configurações Gerais da Clínica
                   </h3>
-
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '600px' }}>
-                    <div>
-                      <label style={{ fontSize: '0.85rem', color: '#7A695D' }}>Headline Principal (Hero):</label>
-                      <input
-                        type="text"
-                        value={settings.heroHeadline}
-                        onChange={(e) => setSettings(prev => ({ ...prev, heroHeadline: e.target.value }))}
-                        style={{ width: '100%', padding: '0.7rem', borderRadius: '8px', border: '1px solid #D9B48F' }}
-                      />
-                    </div>
-
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', maxWidth: '800px', marginBottom: '1.5rem' }}>
                     <div>
                       <label style={{ fontSize: '0.85rem', color: '#7A695D' }}>Telefone WhatsApp da Clínica:</label>
-                      <input
-                        type="text"
-                        value={settings.whatsapp}
-                        onChange={(e) => setSettings(prev => ({ ...prev, whatsapp: e.target.value }))}
-                        style={{ width: '100%', padding: '0.7rem', borderRadius: '8px', border: '1px solid #D9B48F' }}
-                      />
+                      <input type="text" value={settings.whatsapp} onChange={(e) => setSettings(prev => ({ ...prev, whatsapp: e.target.value }))} style={{ width: '100%', padding: '0.7rem', borderRadius: '8px', border: '1px solid #D9B48F' }} />
                     </div>
-
                     <div>
                       <label style={{ fontSize: '0.85rem', color: '#7A695D' }}>Instagram:</label>
-                      <input
-                        type="text"
-                        value={settings.instagram}
-                        onChange={(e) => setSettings(prev => ({ ...prev, instagram: e.target.value }))}
-                        style={{ width: '100%', padding: '0.7rem', borderRadius: '8px', border: '1px solid #D9B48F' }}
-                      />
+                      <input type="text" value={settings.instagram} onChange={(e) => setSettings(prev => ({ ...prev, instagram: e.target.value }))} style={{ width: '100%', padding: '0.7rem', borderRadius: '8px', border: '1px solid #D9B48F' }} />
                     </div>
-
                     <div>
-                      <label style={{ fontSize: '0.85rem', color: '#7A695D' }}>Endereço Completo:</label>
-                      <input
-                        type="text"
-                        value={settings.address}
-                        onChange={(e) => setSettings(prev => ({ ...prev, address: e.target.value }))}
-                        style={{ width: '100%', padding: '0.7rem', borderRadius: '8px', border: '1px solid #D9B48F' }}
-                      />
+                      <label style={{ fontSize: '0.85rem', color: '#7A695D' }}>Início do Expediente (Agenda):</label>
+                      <input type="time" value={settings.workingStartTime} onChange={(e) => setSettings(prev => ({ ...prev, workingStartTime: e.target.value }))} style={{ width: '100%', padding: '0.7rem', borderRadius: '8px', border: '1px solid #D9B48F' }} />
+                    </div>
+                    <div>
+                      <label style={{ fontSize: '0.85rem', color: '#7A695D' }}>Fim do Expediente (Agenda):</label>
+                      <input type="time" value={settings.workingEndTime} onChange={(e) => setSettings(prev => ({ ...prev, workingEndTime: e.target.value }))} style={{ width: '100%', padding: '0.7rem', borderRadius: '8px', border: '1px solid #D9B48F' }} />
                     </div>
                   </div>
-                </div>
-              )}
-
-              {/* TAB 3: BEFORE & AFTER */}
-              {activeTab === 'beforeafter' && (
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                    <h3 className="font-serif" style={{ color: '#8A6245', fontSize: '1.5rem' }}>
-                      Gerenciar Antes & Depois ({_beforeAfterItems.length})
-                    </h3>
-                    <button
-                      onClick={() => setEditingBeforeAfter({ category: 'facial' as any, categoryLabel: 'Facial' })}
-                      className="btn-primary"
-                      style={{ padding: '0.6rem 1rem', fontSize: '0.78rem' }}
-                    >
-                      <Plus size={16} /> Adicionar Caso
-                    </button>
-                  </div>
-
-                  {editingBeforeAfter && (
-                    <div
-                      style={{
-                        background: '#F8F6F2',
-                        border: '1px solid #C8A46A',
-                        padding: '1.5rem',
-                        borderRadius: '16px',
-                        marginBottom: '2rem',
-                      }}
-                    >
-                      <h4 style={{ color: '#8A6245', marginBottom: '1rem' }}>
-                        {editingBeforeAfter.id ? 'Editar Caso Antes & Depois' : 'Novo Caso Antes & Depois'}
-                      </h4>
-
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-                        <div>
-                          <label style={{ fontSize: '0.8rem', color: '#7A695D' }}>Título do Caso:</label>
-                          <input
-                            type="text"
-                            value={editingBeforeAfter.title || ''}
-                            onChange={(e) => setEditingBeforeAfter(prev => ({ ...prev, title: e.target.value }))}
-                            style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }}
-                          />
-                        </div>
-
-                        <div>
-                          <label style={{ fontSize: '0.8rem', color: '#7A695D' }}>Categoria ID (ex: facial, corporal):</label>
-                          <input
-                            type="text"
-                            value={editingBeforeAfter.category || ''}
-                            onChange={(e) => setEditingBeforeAfter(prev => ({ ...prev, category: e.target.value as any }))}
-                            style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }}
-                          />
-                        </div>
-                      </div>
-
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-                        <div>
-                          <label style={{ fontSize: '0.8rem', color: '#7A695D' }}>URL Imagem ANTES (Supabase/Link):</label>
-                          <input
-                            type="text"
-                            value={editingBeforeAfter.beforeImage || ''}
-                            onChange={(e) => setEditingBeforeAfter(prev => ({ ...prev, beforeImage: e.target.value }))}
-                            style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }}
-                          />
-                        </div>
-
-                        <div>
-                          <label style={{ fontSize: '0.8rem', color: '#7A695D' }}>URL Imagem DEPOIS (Supabase/Link):</label>
-                          <input
-                            type="text"
-                            value={editingBeforeAfter.afterImage || ''}
-                            onChange={(e) => setEditingBeforeAfter(prev => ({ ...prev, afterImage: e.target.value }))}
-                            style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }}
-                          />
-                        </div>
-                      </div>
-
-                      <div style={{ marginBottom: '1rem' }}>
-                        <label style={{ fontSize: '0.8rem', color: '#7A695D' }}>Descrição Curta:</label>
-                        <textarea
-                          rows={2}
-                          value={editingBeforeAfter.description || ''}
-                          onChange={(e) => setEditingBeforeAfter(prev => ({ ...prev, description: e.target.value }))}
-                          style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #D9B48F' }}
-                        />
-                      </div>
-
-                      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
-                        <button
-                          type="button"
-                          onClick={() => setEditingBeforeAfter(null)}
-                          style={{ padding: '0.6rem 1.2rem', borderRadius: '8px', border: '1px solid #CCC', background: '#FFF' }}
-                        >
-                          Cancelar
-                        </button>
-                        <button
-                          type="button"
-                          onClick={handleSaveBeforeAfter}
-                          className="btn-primary"
-                          style={{ padding: '0.6rem 1.2rem' }}
-                        >
-                          Salvar Alterações
-                        </button>
-                      </div>
-                    </div>
-                  )}
-
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-                    {_beforeAfterItems.map((item) => (
-                      <div
-                        key={item.id}
-                        style={{
-                          padding: '1rem 1.2rem',
-                          border: '1px solid #E8E4DF',
-                          borderRadius: '12px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                        }}
-                      >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                          <img src={item.afterImage} alt="" style={{ width: '50px', height: '50px', borderRadius: '8px', objectFit: 'cover' }} />
-                          <div>
-                            <strong style={{ color: '#8A6245' }}>{item.title}</strong>
-                            <span style={{ display: 'block', fontSize: '0.78rem', color: '#7A695D' }}>
-                              {item.categoryLabel}
-                            </span>
-                          </div>
-                        </div>
-
-                        <div style={{ display: 'flex', gap: '0.6rem' }}>
-                          <button
-                            onClick={() => setEditingBeforeAfter(item)}
-                            style={{ background: '#F3E6D3', border: 'none', borderRadius: '6px', padding: '0.4rem 0.8rem', color: '#8A6245', cursor: 'pointer' }}
-                          >
-                            <Edit size={14} /> Editar
-                          </button>
-                          <button
-                            onClick={() => handleDeleteBeforeAfter(item.id)}
-                            style={{ background: '#FFF6F6', border: 'none', borderRadius: '6px', padding: '0.4rem 0.8rem', color: '#D9534F', cursor: 'pointer' }}
-                          >
-                            <Trash2 size={14} /> Excluir
-                          </button>
-                        </div>
-                      </div>
-                    ))}
+                  <div style={{ maxWidth: '800px' }}>
+                    <label style={{ fontSize: '0.85rem', color: '#7A695D' }}>Endereço Completo:</label>
+                    <input type="text" value={settings.address} onChange={(e) => setSettings(prev => ({ ...prev, address: e.target.value }))} style={{ width: '100%', padding: '0.7rem', borderRadius: '8px', border: '1px solid #D9B48F' }} />
                   </div>
                 </div>
               )}
 
-              {/* Other tabs placeholder summary */}
-              {(activeTab === 'testimonials' || activeTab === 'faqs') && (
-                <div>
-                  <h3 className="font-serif" style={{ color: '#8A6245', fontSize: '1.5rem', marginBottom: '1rem' }}>
-                    Gerenciamento de {activeTab.toUpperCase()}
-                  </h3>
-                  <p style={{ color: '#7A695D' }}>
-                    Módulo de edição interativo pronto para gestão de itens do banco de dados local.
-                  </p>
-                </div>
-              )}
             </div>
           </div>
         )}
